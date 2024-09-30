@@ -12,4 +12,10 @@ export class SurveyService {
 
     return survey;
   }
+
+  async list() {
+    const surveys = await prismaClient.survey.findMany();
+
+    return surveys;
+  }
 }

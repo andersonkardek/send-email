@@ -6,3 +6,4 @@ export const router = Router();
 
 router.post("/users", new UserController().create);
 router.post("/surveys", new SurveysController().create);
+router.get("/surveys", new SurveysController().show);

@@ -20,4 +20,16 @@ export class SurveysController {
       console.log(error);
     }
   }
+
+  async show(request: Request, response: Response) {
+    const service = new SurveyService();
+
+    try {
+      const result = await service.list();
+
+      response.status(201).json(result);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
