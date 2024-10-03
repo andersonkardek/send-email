@@ -1,6 +1,7 @@
-export class SurveyAlreadyExistsError extends Error {
+import { BaseError } from "./ErrorHandler"
+
+export class SurveyAlreadyExistsError extends BaseError {
 	constructor(message = "Survey already exists") {
-		super(message)
-		this.name = "SurveyAlreadyExistsError"
+		super(message, 409)
 	}
 }

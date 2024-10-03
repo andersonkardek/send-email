@@ -1,35 +1,28 @@
-import { Request, Response } from "express";
-import { SurveyService } from "../services/SurveysService";
+import { Request, Response } from 'express'
+import { SurveyService } from '../services/SurveysService'
+import { asyncHandler } from './AsyncHandler'
 
 interface ISurvey {
-  title: string;
-  description?: string;
+	title: string
+	description?: string
 }
 
 export class SurveysController {
-  async create(request: Request, response: Response) {
-    const { title, description } = request.body as ISurvey;
+	create = asyncHandler(async (request: Request, response: Response) => {
+		const { title, description } = request.body as ISurvey
 
-    const service = new SurveyService();
+		const service = new SurveyService()
 
-    try {
-      const result = await service.execute(title, description);
+		const result = await service.execute(title, description)
 
-      response.status(201).json(result);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+		response.status(201).json(result)
+	})
 
-  async show(request: Request, response: Response) {
-    const service = new SurveyService();
+	show = asyncHandler(async (request: Request, response: Response) => {
+		const service = new SurveyService()
 
-    try {
-      const result = await service.list();
+		const result = await service.list()
 
-      response.status(201).json(result);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+		response.status(200).json(result)
+	})
 }

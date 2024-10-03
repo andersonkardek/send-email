@@ -1,6 +1,7 @@
-export class UserAlreadyExistsError extends Error {
-  constructor() {
-    super("User already exists");
-    this.name = "UserAlreadyExistsError";
-  }
+import { BaseError } from "./ErrorHandler"
+
+export class UserAlreadyExistsError extends BaseError {
+	constructor(message = "User already exists") {
+		super(message, 409)
+	}
 }
