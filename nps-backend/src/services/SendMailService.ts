@@ -1,6 +1,7 @@
-import { SurveyAlreadyExistsError } from "../erros/SurveyAlreadyExistsError"
-import { UserAlreadyExistsError } from "../erros/UserAlredyExistsError"
-import prismaClient from "../prisma"
+import { SurveyAlreadyExistsError } from '../erros/SurveyAlreadyExistsError'
+import { UserAlreadyExistsError } from '../erros/UserAlredyExistsError'
+import prismaClient from '../prisma'
+import NodeMaileService from './NodeMaileService'
 
 export class SendMailService {
 	async execute(email: string, survey_id: string) {
@@ -33,6 +34,10 @@ export class SendMailService {
 			},
 		})
 
+		await NodeMaileService.execute(email, surveyAlredyExists.title, 'descricao')
+
 		return surveyUser
 	}
+
+	async sendEmail() {}
 }

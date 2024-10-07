@@ -25,12 +25,12 @@ Content-Type: application/json
 ###
 
 
-GET http://localhost:3333/send-mail
+POST http://localhost:3333/send-mail
 Content-Type: application/json
 
 {
-  "email": "ronaldo@gmail.com",
-  "survey_id": "0ea2feff-0d4a-48d5-b938-1ffee35ed02e"
+  "email": "ronaldo2@gmail.com",
+  "survey_id": "922d9e80-6449-4526-99e1-e51c51e92cb7"
 }
 
 ###
