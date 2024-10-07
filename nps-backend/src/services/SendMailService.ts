@@ -2,6 +2,7 @@ import { SurveyAlreadyExistsError } from '../erros/SurveyAlreadyExistsError'
 import { UserAlreadyExistsError } from '../erros/UserAlredyExistsError'
 import prismaClient from '../prisma'
 import NodeMaileService from './NodeMaileService'
+import { resolve } from 'node:path'
 
 export class SendMailService {
 	async execute(email: string, survey_id: string) {
@@ -34,7 +35,21 @@ export class SendMailService {
 			},
 		})
 
-		await NodeMaileService.execute(email, surveyAlredyExists.title, 'descricao')
+		const npsPath = resolve(__dirname, '..', 'views', 'mails', 'npsMail.hbs')
+
+		const variables = {
+			name: userAlredyExists.name,
+			title: surveyAlredyExists.title,
+			description: surveyAlredyExists.description,
+			id: userAlredyExists.id,
+			link: process.env.URL_MAIL,
+		}
+		await NodeMaileService.execute(
+			email,
+			surveyAlredyExists.title,
+			variables,
+			npsPath
+		)
 
 		return surveyUser
 	}

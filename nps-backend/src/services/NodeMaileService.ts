@@ -1,4 +1,6 @@
 import nodemailer, { Transporter } from 'nodemailer'
+import handlebars from 'handlebars'
+import fs from 'node:fs'
 
 class NodeMaileService {
 	private cliente: Transporter | undefined
@@ -19,7 +21,13 @@ class NodeMaileService {
 			},
 		})
 	}
-	async execute(to: string, subject: string, body: string) {
+	async execute(to: string, subject: string, variable: object, path: string) {
+		const templateFileContent = fs.readFileSync(path).toString('utf-8')
+
+		const mailTemplateParse = handlebars.compile(templateFileContent)
+
+		const html = mailTemplateParse(variable)
+
 		if (!this.cliente) {
 			throw new Error('Transporter is not initialized yet')
 		}
@@ -27,7 +35,7 @@ class NodeMaileService {
 		const message = await this.cliente?.sendMail({
 			to,
 			subject,
-			html: body,
+			html,
 			from: 'NPS <noreplay@nps.com.br>',
 		})
 

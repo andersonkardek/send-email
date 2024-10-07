@@ -13,6 +13,7 @@
   "description": "",
   "dependencies": {
     "@prisma/client": "^5.20.0",
+    "@types/handlebars": "^4.0.40",
     "@types/nodemailer": "^6.4.16",
     "express": "^4.21.0",
     "handlebars": "^4.7.8",
