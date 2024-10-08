@@ -28,16 +28,6 @@ export class SendMailService {
 			throw new SurveyAlreadyExistsError();
 		}
 
-		const npsPath = resolve(__dirname, '..', 'views', 'mails', 'npsMail.hbs');
-
-		const variables = {
-			name: userAlredyExists.name,
-			title: surveyAlredyExists.title,
-			description: surveyAlredyExists.description,
-			id: userAlredyExists.id,
-			link: process.env.URL_MAIL,
-		};
-
 		const surveyUserAlreadyExists = await prismaClient.survey_User.findFirst({
 			where: {
 				user_id: userAlredyExists?.id,
@@ -45,7 +35,19 @@ export class SendMailService {
 			},
 		});
 
+		const npsPath = resolve(__dirname, '..', 'views', 'mails', 'npsMail.hbs');
+
+		const variables = {
+			name: userAlredyExists.name,
+			title: surveyAlredyExists.title,
+			description: surveyAlredyExists.description,
+			id: '',
+			link: process.env.URL_MAIL,
+		};
+
 		if (surveyUserAlreadyExists || surveyUserAlreadyExists != null) {
+			variables.id = surveyUserAlreadyExists?.id;
+
 			await NodeMaileService.execute(
 				email,
 				surveyAlredyExists.title,
@@ -63,6 +65,7 @@ export class SendMailService {
 			},
 		});
 
+		variables.id = surveyUser.id;
 		await NodeMaileService.execute(
 			email,
 			surveyAlredyExists.title,

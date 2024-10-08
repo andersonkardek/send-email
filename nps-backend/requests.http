@@ -29,7 +29,7 @@ POST http://localhost:3333/send-mail
 Content-Type: application/json
 
 {
-  "email": "ronaldo2@gmail.com",
+  "email": "ronaldo@gmail.com",
   "survey_id": "922d9e80-6449-4526-99e1-e51c51e92cb7"
 }
 
