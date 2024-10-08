@@ -1,16 +1,16 @@
-import nodemailer, { Transporter } from 'nodemailer'
-import handlebars from 'handlebars'
-import fs from 'node:fs'
+import nodemailer, { Transporter } from 'nodemailer';
+import handlebars from 'handlebars';
+import fs from 'node:fs';
 
 class NodeMaileService {
-	private cliente: Transporter | undefined
+	private cliente: Transporter | undefined;
 
 	constructor() {
-		this.initializeTransporter()
+		this.initializeTransporter();
 	}
 
 	private async initializeTransporter() {
-		const account = await nodemailer.createTestAccount()
+		const account = await nodemailer.createTestAccount();
 		this.cliente = nodemailer.createTransport({
 			host: account.smtp.host,
 			port: account.smtp.port,
@@ -19,17 +19,17 @@ class NodeMaileService {
 				user: account.user,
 				pass: account.pass,
 			},
-		})
+		});
 	}
 	async execute(to: string, subject: string, variable: object, path: string) {
-		const templateFileContent = fs.readFileSync(path).toString('utf-8')
+		const templateFileContent = fs.readFileSync(path).toString('utf-8');
 
-		const mailTemplateParse = handlebars.compile(templateFileContent)
+		const mailTemplateParse = handlebars.compile(templateFileContent);
 
-		const html = mailTemplateParse(variable)
+		const html = mailTemplateParse(variable);
 
 		if (!this.cliente) {
-			throw new Error('Transporter is not initialized yet')
+			throw new Error('Transporter is not initialized yet');
 		}
 
 		const message = await this.cliente?.sendMail({
@@ -37,11 +37,11 @@ class NodeMaileService {
 			subject,
 			html,
 			from: 'NPS <noreplay@nps.com.br>',
-		})
+		});
 
-		console.log('Message sent: %s', message.messageId)
-		console.log('Preview URL: %s', nodemailer.getTestMessageUrl(message))
+		console.log('Message sent: %s', message.messageId);
+		console.log('Preview URL: %s', nodemailer.getTestMessageUrl(message));
 	}
 }
 
-export default new NodeMaileService()
+export default new NodeMaileService();

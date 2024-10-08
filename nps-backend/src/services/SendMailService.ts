@@ -1,8 +1,8 @@
-import { SurveyAlreadyExistsError } from '../erros/SurveyAlreadyExistsError'
-import { UserAlreadyExistsError } from '../erros/UserAlredyExistsError'
-import prismaClient from '../prisma'
-import NodeMaileService from './NodeMaileService'
-import { resolve } from 'node:path'
+import { SurveyAlreadyExistsError } from '../erros/SurveyAlreadyExistsError';
+import { UserAlreadyExistsError } from '../erros/UserAlredyExistsError';
+import prismaClient from '../prisma';
+import NodeMaileService from './NodeMaileService';
+import { resolve } from 'node:path';
 
 export class SendMailService {
 	async execute(email: string, survey_id: string) {
@@ -18,24 +18,17 @@ export class SendMailService {
 					id: survey_id,
 				},
 			}),
-		])
+		]);
 
 		if (!userAlredyExists || userAlredyExists == null) {
-			throw new UserAlreadyExistsError()
+			throw new UserAlreadyExistsError();
 		}
 
 		if (!surveyAlredyExists || surveyAlredyExists == null) {
-			throw new SurveyAlreadyExistsError()
+			throw new SurveyAlreadyExistsError();
 		}
 
-		const surveyUser = await prismaClient.survey_User.create({
-			data: {
-				user_id: userAlredyExists.id,
-				survey_id,
-			},
-		})
-
-		const npsPath = resolve(__dirname, '..', 'views', 'mails', 'npsMail.hbs')
+		const npsPath = resolve(__dirname, '..', 'views', 'mails', 'npsMail.hbs');
 
 		const variables = {
 			name: userAlredyExists.name,
@@ -43,15 +36,41 @@ export class SendMailService {
 			description: surveyAlredyExists.description,
 			id: userAlredyExists.id,
 			link: process.env.URL_MAIL,
+		};
+
+		const surveyUserAlreadyExists = await prismaClient.survey_User.findFirst({
+			where: {
+				user_id: userAlredyExists?.id,
+				value: null,
+			},
+		});
+
+		if (surveyUserAlreadyExists || surveyUserAlreadyExists != null) {
+			await NodeMaileService.execute(
+				email,
+				surveyAlredyExists.title,
+				variables,
+				npsPath
+			);
+
+			return surveyUserAlreadyExists;
 		}
+
+		const surveyUser = await prismaClient.survey_User.create({
+			data: {
+				user_id: userAlredyExists.id,
+				survey_id,
+			},
+		});
+
 		await NodeMaileService.execute(
 			email,
 			surveyAlredyExists.title,
 			variables,
 			npsPath
-		)
+		);
 
-		return surveyUser
+		return surveyUser;
 	}
 
 	async sendEmail() {}
