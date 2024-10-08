@@ -1,4 +1,4 @@
-import prismaClient from "../prisma"
+import prismaClient from '../prisma';
 
 export class SurveyService {
 	async execute(title: string, description?: string) {
@@ -7,14 +7,14 @@ export class SurveyService {
 				title,
 				description,
 			},
-		})
+		});
 
-		return survey
+		return survey;
 	}
 
 	async list() {
-		const surveys = await prismaClient.survey.findMany()
+		const surveys = await prismaClient.survey.findMany();
 
-		return surveys
+		return surveys;
 	}
 }
